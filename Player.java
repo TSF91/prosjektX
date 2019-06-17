@@ -67,7 +67,7 @@ public class Player extends GameObject {
             public void mousePressed(MouseEvent e) {
                 int x = (int)myLocation.getX();
                 int y = (int)myLocation.getY();
-                Bullet bu = new Bullet(x, y,10, 2, 2, 0, gw, 20);
+                Bullet bu = new Bullet(x, y,5, 2, 2, 0, gw, 20);
                 gw.getGameBoard().add(bu.getIcon());
                 bu.move(0, 0);
                 System.out.println("Components on GameBoard = " + gw.getGameBoard().getComponentCount());
@@ -94,15 +94,18 @@ public class Player extends GameObject {
             public void mouseMoved(MouseEvent e) {
                 
                 Point  p = e.getPoint();
-               if(p != myLocation){
+                if(p != myLocation){
                    setMyLocation(p);
-               } 
+                } 
                
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
-              
+                Point  p = e.getPoint();
+                if(p != myLocation){
+                    setMyLocation(p);
+                } 
             } 
 
 

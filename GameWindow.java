@@ -3,9 +3,9 @@
  * Class to generate gamewindow. Frame with JPanel 
  */
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.*;
 public class GameWindow{
+    private  JLabel bg = new JLabel(new ImageIcon("C:\\DEV\\Gui\\prosjektX\\Graphics\\bg.jpg"));
     private JFrame frame;
     private JPanel gameBoard; 
     private int frameW; 
@@ -25,14 +25,12 @@ public class GameWindow{
         this.frameH = frameH;
         this.frameName = frameName; 
         this.frame = new JFrame(frameName);
-        this.gameBoard = new JPanel();
-        this.gameBoard.setLayout(null);
-        this.gameBoard.setBackground(color);
-        this.gameBoard.setBounds(10,10, frameW-10, frameH-10);
+        bg.setBounds(frame.getBounds());
+        frame.add(bg);
         this.frame.setResizable(false);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(frameW,frameH);
-        this.frame.add(this.gameBoard);
+        this.frame.add(this.bg);
         this.frame.setVisible(true);
         
     }
@@ -41,6 +39,17 @@ public class GameWindow{
      * @param rate - refresh rate for frame
      */
     public static void refresh(int rate,GameWindow gw){
+        Enemy[] all = Enemy.getAllEnemies(); 
+        int enCount = Enemy.getEnemyCount(); 
+        for (int i = 0; i < enCount; i++) {
+            if(all[i].getHp()>0){
+                all[i].getIcon().setLocation(all[i].getPosX(), all[i].getPosY());
+            } else {
+                gw.getGameBoard().remove(all[i].getIcon());
+            }
+            
+
+        }
         gw.getGameBoard().revalidate();
         gw.getGameBoard().repaint();
         try {
@@ -73,8 +82,8 @@ public class GameWindow{
     public JFrame getGameWindow(){
         return this.frame; 
     }
-    public JPanel getGameBoard(){
-        return this.gameBoard;
+    public JLabel getGameBoard(){
+        return this.bg;
     }
         
         

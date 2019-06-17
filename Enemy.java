@@ -14,10 +14,14 @@ public class Enemy extends GameObject{
     private Boolean moveDone;
     private GameWindow gw; 
     private Rectangle myHitBox;
+    private static int enemyCount = 0; 
     private Color red = new Color(255,0,0);
-    private static int enemyCount = 1; 
-    
+    private Color orange = new Color(255,200,0);
+    private Color green = new Color(0,255,0); 
     private static Enemy[] allEnemies = new Enemy[100];
+    private JPanel hBar = new JPanel();
+    private double startHp;
+    private double startWidth; 
     
     /**
      * Constructor
@@ -31,36 +35,55 @@ public class Enemy extends GameObject{
      */ 
     public Enemy(int posX,int posY,int speed,int objWidth,int objHeight,int hp,GameWindow gw){
         super(posX, posY, speed, objWidth, objHeight,hp,gw);
-        icon.setBounds(posX,posY,objWidth,objHeight); 
+        this.icon.setBounds(posX,posY,objWidth,objHeight);
+        this.hBar.setBounds(0, 0, objWidth, 5);
+        this.hBar.setBackground(green);
+        icon.add(this.hBar);
         this.moveDone = true;
         this.hit = false;
         this.myHitBox = this.getIcon().getBounds(); 
-        allEnemies[enemyCount -1] = this; 
+        allEnemies[enemyCount] = this; 
         enemyCount++;
+        this.startHp =(double)hp;
+        this.startWidth = (double)objWidth; 
     }
 
+    public  void setHealthBar(){
+        double currHp = (double)getHp(); 
+        if(currHp/startHp < 0.55 && currHp/startHp > 0.25 ){
+            this.hBar.setBackground(orange);
+        } else if(currHp/startHp < 0.25 ){
+            this.hBar.setBackground(red);
+        }
+        double hBarWidht = (currHp/startHp)*startWidth;
+        this.hBar.setSize((int)hBarWidht, hBar.getHeight());
+    }
+
+    
     
     public static Enemy[] getAllEnemies(){
         return allEnemies;
     }
-    public void setHp(int hp){
+    public  void setHp(int hp){
         this.hp = hp;
         CombatText.flashHit(this);
-        if(hp <= 0){
-            this.remove();
-        }
+        setHealthBar();
+        System.out.println("id: " + getId() + " my hp: " + getHp());
+    }
+    public static int getEnemyCount(){
+        return enemyCount; 
     }
    
     //Hitbox that bullet can intersect with 
     public void setMyHitBox(){
         this.myHitBox = this.getIcon().getBounds();
     }
-    public Rectangle getMyHitBox(){
+    public synchronized Rectangle getMyHitBox(){
         return this.myHitBox;
     }
     //removes graphic from GameBoard
     public void remove(){
-        this.gw.getGameBoard().remove(this.icon);
+        this.gw.getGameBoard().remove(getIcon());
     }
 
     //check if enemy is hit
@@ -110,9 +133,13 @@ public class Enemy extends GameObject{
             public void run() {
                 int[][] movePatteren = getMyPath();
                 for (int i = 1; i < movePatteren.length; i++) {
+                    if(getHp() <= 0 ){
+                        
+                        break; 
+                    }
                     setPosX(movePatteren[i][0]);
                     setPosY(movePatteren[0][i]); 
-                    icon.setLocation(movePatteren[i][0], movePatteren[0][i]);
+                    
                     setMyHitBox();
                     try {
                         Thread.sleep(getSpeed());
