@@ -19,8 +19,9 @@ public class Enemy extends GameObject{
     private Color orange = new Color(255,200,0);
     private Color green = new Color(0,255,0); 
     private static Enemy[] allEnemies = new Enemy[100];
-    private JPanel hBar;
-    private int startHp;
+    private JPanel hBar = new JPanel();
+    private double startHp;
+    private double startWidth; 
     
     /**
      * Constructor
@@ -35,8 +36,7 @@ public class Enemy extends GameObject{
     public Enemy(int posX,int posY,int speed,int objWidth,int objHeight,int hp,GameWindow gw){
         super(posX, posY, speed, objWidth, objHeight,hp,gw);
         this.icon.setBounds(posX,posY,objWidth,objHeight);
-        this.hBar = new JPanel();
-        this.hBar.setBounds(posX, posY, objWidth, 5);
+        this.hBar.setBounds(0, 0, objWidth, 5);
         this.hBar.setBackground(green);
         icon.add(this.hBar);
         this.moveDone = true;
@@ -44,13 +44,22 @@ public class Enemy extends GameObject{
         this.myHitBox = this.getIcon().getBounds(); 
         allEnemies[enemyCount] = this; 
         enemyCount++;
-        this.startHp = hp;
+        this.startHp =(double)hp;
+        this.startWidth = (double)objWidth; 
     }
 
-    public static void setHealthBar(){
-        
-     
+    public  void setHealthBar(){
+        double currHp = (double)getHp(); 
+        if(currHp/startHp < 0.55 && currHp/startHp > 0.25 ){
+            this.hBar.setBackground(orange);
+        } else if(currHp/startHp < 0.25 ){
+            this.hBar.setBackground(red);
+        }
+        double hBarWidht = (currHp/startHp)*startWidth;
+        this.hBar.setSize((int)hBarWidht, hBar.getHeight());
     }
+
+    
     
     public static Enemy[] getAllEnemies(){
         return allEnemies;
@@ -58,6 +67,7 @@ public class Enemy extends GameObject{
     public  void setHp(int hp){
         this.hp = hp;
         CombatText.flashHit(this);
+        setHealthBar();
         System.out.println("id: " + getId() + " my hp: " + getHp());
     }
     public static int getEnemyCount(){
