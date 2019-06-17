@@ -2,15 +2,14 @@
 
 public class Test3 {
     public static void main(String[] args){
-       GameWindow gw = new GameWindow(800, 1000, "Test3");
+       GameWindow gw = new GameWindow(850, 567, "Test3");
        Player pl = new Player(200, 200, 0, 10, 10, 10, gw);
-       gw.getGameBoard().add(pl.getIcon());
+        gw.getGameBoard().add(pl.getIcon());
        Enemy[] enemys = new Enemy[10];
        for (int i = 0; i < enemys.length; i++) {
-           enemys[i] = new Enemy(i*50, 0, MoveObject.randomPos(20,50), 50, 50, 1000, gw);
+           enemys[i] = new Enemy(i*50, 0, MoveObject.randomPos(20,50), 50, 50, 200, gw);
            gw.getGameBoard().add(enemys[i].getIcon());
-           enemys[i].move((MoveObject.randomPos(0, 750)),(MoveObject.randomPos(0, 800)));
-           
+           enemys[i].move((MoveObject.randomPos(0, 750)),(MoveObject.randomPos(0, 800)));  
        }
        gw.getGameBoard().revalidate();
        gw.getGameBoard().repaint();

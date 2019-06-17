@@ -94,15 +94,18 @@ public class Player extends GameObject {
             public void mouseMoved(MouseEvent e) {
                 
                 Point  p = e.getPoint();
-               if(p != myLocation){
+                if(p != myLocation){
                    setMyLocation(p);
-               } 
+                } 
                
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
-              
+                Point  p = e.getPoint();
+                if(p != myLocation){
+                    setMyLocation(p);
+                } 
             } 
 
 

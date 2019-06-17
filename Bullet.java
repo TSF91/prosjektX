@@ -55,12 +55,13 @@ public class Bullet extends GameObject{
     public void deleteMyHitBox(){
         this.myHitBox = new Rectangle();   
     }
-    public Rectangle getMyHitBox(){
+    public synchronized Rectangle getMyHitBox(){
         return this.myHitBox;
     }
     public JLabel getIcon(){
         return this.icon; 
     }
+    
     // Remove graphics from gameBoard
     public void remove(){
        gw.getGameBoard().remove(getIcon());
@@ -113,13 +114,18 @@ public class Bullet extends GameObject{
                     setPosY(movePatteren[0][i]);
                     icon.setLocation(movePatteren[i][0], movePatteren[0][i]);
                     setMyHitBox();
-                    for (int j = 0; j < 1; j++) {
-                        if(getMyHitBox().intersects(allEnemies[j].getMyHitBox())){
+                    for (int j = 0; j < Enemy.getEnemyCount(); j++) {
+                       
+                        if(allEnemies[j].getHp() > 0 && getMyHitBox().intersects(allEnemies[j].getMyHitBox())){
                             allEnemies[j].setHp(allEnemies[j].getHp()-getDmg());
+                            if(allEnemies[j].getHp() < 1){
+                                break;
+                            }
                             CombatText.dmg(allEnemies[j], bu);
                             System.out.println("my hp is: " + allEnemies[j].getHp());
-                            bu.setBulletHit(true); 
-                        }
+                            bu.setBulletHit(true);
+                        } 
+                       
                     }
                     try {
                         Thread.sleep(getSpeed());
@@ -127,7 +133,9 @@ public class Bullet extends GameObject{
                         System.out.println("BUGGA");
                     }
                 }
-                setBulletHit(true); 
+                if(!getBulletHit()){
+                    setBulletHit(true); 
+                }
             }
         };
         new Thread(this.startMove).start();      

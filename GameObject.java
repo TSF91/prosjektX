@@ -4,6 +4,7 @@
  */
 import java.awt.Rectangle;
 import javax.swing.*; 
+import java.awt.*;
 
 public abstract class GameObject{
     private static int objectCount = 0; 
@@ -56,7 +57,7 @@ public abstract class GameObject{
     public JFrame getGameWindow(){
         return this.gw.getGameWindow(); 
     }
-    public JPanel getGameBoard(){
+    public JLabel getGameBoard(){
         return this.gw.getGameBoard();
     }
     public int getId(){
@@ -87,7 +88,7 @@ public abstract class GameObject{
         return this.objHeight; 
     }
 
-    public int getHp(){
+    public synchronized int getHp(){
         return this.hp;
     }
 
@@ -123,8 +124,6 @@ public abstract class GameObject{
     public abstract JLabel getIcon();
 
     public abstract Boolean getMoveDone();
-
-    public abstract Rectangle getMyHitBox();
 
     public abstract int[][] getMyPath(); 
 

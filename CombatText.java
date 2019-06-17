@@ -41,7 +41,7 @@ public class CombatText{
         Runnable showDmg = new Runnable(){
             @Override
             public void run() {
-                JPanel gameBoard = fi.getGameBoard();
+                JLabel gameBoard = fi.getGameBoard();
                 int x = fi.getPosX();
                 int y = dmgLabel.getY(); 
                 int xDir = (dirRight)? 1:-1; //sets direction for CT to float away. 
@@ -90,4 +90,5 @@ public class CombatText{
         }; 
        new Thread(blink).start();
     }
+    
 }
